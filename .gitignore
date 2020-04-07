@@ -1,0 +1,10 @@
+client/node_modules
+client/src/assets
+client/.env
+client/.env.development
+client/.env.production
+client/dist
+
+server/node_modules
+server/.env
+
