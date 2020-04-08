@@ -2,5 +2,8 @@
   "scripts": {
     "start": "cd server && node index.js",
     "heroku-postbuild": "cd server && npm install && cd .. && cd client && npm install && npm run build"
+  },
+  "dependencies": {
+    "express-query-boolean": "^2.0.0"
   }
 }

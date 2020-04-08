@@ -6,13 +6,12 @@ const cors = require('cors');
 const checkToken = require("./util/checkToken");
 const serveStatic = require('serve-static')
 const path = require('path')
-
-
+const boolParser = require('express-query-boolean');
 
 require('dotenv').config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(checkToken);
+app.use(boolParser());
 
 // @@ Router Route locations
 app.use('/api/users', require('./routes/users'));

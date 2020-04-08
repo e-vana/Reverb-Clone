@@ -75,13 +75,38 @@ router.get('/c/:category', catchErrors(async (req, res) => {
     catStr = req.params.category;
   }
 
-  var listings = await Listing.find({ category: catStr});
-  if(listings){
-    res.send(listings);
-  } else {
-    throw { message: "No listings found with this category tag."}
+  var queryParams = [];
+
+  if(req.query.used){
+    queryParams.push({ used: true})
   }
+
+
+  if(req.query.new){
+    queryParams.push({ used: false})
+  }
+
+  //If there are no query parameters
+  if(queryParams.length == 0){
+    var listings = await Listing.find({category: catStr});
+    if(!listings){
+      throw {message: "There were no results found with your query parameters."}
+    }
+    return res.send(listings);
+  }
+  //If there are query parameters, AND them into the query
+  if(queryParams.length > 0){
+    queryParams.push({category: catStr})
+    var listings = await Listing.find({$and: queryParams})
+    if(!listings){
+      throw {message: "There were no results found with your query parameters."}
+    }
+    return res.send(listings);
+  }
+
 }))
+
+
 
 // Get number of listings in a category
 router.get('/c/:category/numberOf', catchErrors(async (req, res) => {
@@ -158,5 +183,15 @@ router.post('/random', catchErrors(async (req, res) => {
   }
 
 }))
+
+// end points for /items
+// get('/')
+// get('/:id')
+// get('/popular')
+
+// where
+// get('/new')
+// should be
+// get('/?sort=new')
 
 module.exports = router;

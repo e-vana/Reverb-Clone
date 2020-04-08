@@ -22,6 +22,11 @@ let listingSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  used: {
+    type: Boolean,
+    required: true,
+    default: true
+  },
   year: {
     type: Number,
     required: true

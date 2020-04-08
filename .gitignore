@@ -6,5 +6,6 @@ client/.env.production
 client/dist
 
 server/node_modules
+
 server/.env
 

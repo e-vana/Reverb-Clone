@@ -65,6 +65,7 @@ const generateRandomListing = function(){
   var guitar = guitars[getRandomInt(0, guitars.length)];
   guitar.dateAdded = Date.now();
   guitar.user = faker.random.uuid();
+  guitar.used = false;
   guitar.condition = conditionTypes[getRandomInt(0, conditionTypes.length)];
   guitar.year = getRandomInt(1955, 2020);
   guitar.color = faker.commerce.color();
