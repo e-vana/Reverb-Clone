@@ -6,11 +6,13 @@ const tokenBlacklist = require("../models/tokenBlacklist");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
+const faker = require('faker');
 
 //Util Functions
 const catchErrors = require("../util/catchErrors");
 const isAdmin = require("../util/isAdmin");
 const checkToken = require("../util/checkToken");
+const randomListing = require("../util/fakeListingGenerator")
 
 //CORS
 router.use(function(req, res, next) {
@@ -22,6 +24,7 @@ router.use(function(req, res, next) {
   next();
 });
 
+// Get all listings 
 router.get('/', catchErrors(async (req, res) => {
   var listings = await Listing.find();
   if(listings){
@@ -31,7 +34,7 @@ router.get('/', catchErrors(async (req, res) => {
   }
 }));
 
-
+// Get all listings with feature == true
 router.get('/featured-listings', catchErrors(async (req, res) => {
   var listing = await Listing.find({featured: true})
   if(listing){
@@ -41,6 +44,7 @@ router.get('/featured-listings', catchErrors(async (req, res) => {
   }
 }));
 
+// Get all of the most recent listings
 router.get('/new-listings', catchErrors(async (req, res) => {
   var listing = await Listing.find({}, {}, { sort: { 'dateAdded' : -1 } })
   if(listing){
@@ -50,37 +54,38 @@ router.get('/new-listings', catchErrors(async (req, res) => {
   }
 }));
 
-router.get('/:id', catchErrors(async (req, res) => {
-  var listing = await Listing.find({ _id: req.params.id });
-  if(listing){
-    res.send(listing);
-  } else {
-    throw { message: "No listing found."}
-  }
-}));
-
-// router.post('/', catchErrors(async (req, res) => {
-//   var doesExist = await Product.findOne({itemName: req.body.itemName});
-//   if(doesExist){
-//     throw { message: "A product with this name already exists."}
+// Get a certain listing by ID
+// router.get('/:id', catchErrors(async (req, res) => {
+//   var listing = await Listing.find({ _id: req.params.id });
+//   if(listing){
+//     res.send(listing);
+//   } else {
+//     throw { message: "No listing found."}
 //   }
+// }));
 
-
-//   const newProduct = new Product({
-//     itemName: req.body.itemName,
-//     itemPrice: req.body.itemPrice,
-//     itemPictureUrl: req.body.itemPictureUrl,
-//     itemPictureUrlLarge: req.body.itemPictureUrlLarge,
-//     itemDescription: req.body.itemDescription,
-//     featured: req.body.featured,
-//     dateAdded: Date.now()
-//   });
-
-//   var save = await newProduct.save();
-//   if(save){
-//     res.send(save);
-//   }else {
-//     throw { message: "Error saving new product."}
+// Get all listings from a category
+// router.get('/c/:category', catchErrors(async (req, res) => {
+//   var listings = await Listing.find({ category: req.params.category});
+//   if(listings){
+//     res.send(listings);
+//   } else {
+//     throw { message: "No listings found with this category tag."}
 //   }
 // }))
+
+router.post('/random', catchErrors(async (req, res) => {
+  // var item = RandomListing.generateRandomListing();
+  var item = randomListing.generateRandomListing();
+  var newListing = new Listing(item);
+  var saveNewListing = await newListing.save();
+
+  if(saveNewListing){
+    res.send(saveNewListing)
+  } else {
+    throw { message: "Failed to save new item."}
+  }
+
+}))
+
 module.exports = router;

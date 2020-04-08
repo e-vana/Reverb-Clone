@@ -17,10 +17,6 @@ let listingSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  brand: {
-    type: String,
-    required: true
-  },
   //Brand New, Mint, Excellent, Good, Fair, Poor, Broken
   condition: {
     type: String,
@@ -82,6 +78,11 @@ let listingSchema = mongoose.Schema({
     type: Boolean,
     required: false,
     default: false
+  },
+  clicks: {
+    type: Number,
+    required: false,
+    default: 0
   }
 })
 
