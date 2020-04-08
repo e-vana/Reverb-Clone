@@ -6,7 +6,6 @@ const tokenBlacklist = require("../models/tokenBlacklist");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
-const faker = require('faker');
 
 //Util Functions
 const catchErrors = require("../util/catchErrors");
@@ -24,6 +23,7 @@ router.use(function(req, res, next) {
   next();
 });
 
+//@@@@@@@@@@@@@@@@@@@@@@@@ GENERIC LISTING OPERATIONS @@@@@@@@@@@@@@@@@@@@@@@@
 // Get all listings 
 router.get('/', catchErrors(async (req, res) => {
   var listings = await Listing.find();
@@ -55,25 +55,96 @@ router.get('/new-listings', catchErrors(async (req, res) => {
 }));
 
 // Get a certain listing by ID
-// router.get('/:id', catchErrors(async (req, res) => {
-//   var listing = await Listing.find({ _id: req.params.id });
-//   if(listing){
-//     res.send(listing);
-//   } else {
-//     throw { message: "No listing found."}
-//   }
-// }));
+router.get('/:id', catchErrors(async (req, res) => {
+  var listing = await Listing.find({ _id: req.params.id });
+  if(listing){
+    res.send(listing);
+  } else {
+    throw { message: "No listing found."}
+  }
+}));
 
+//@@@@@@@@@@@@@@@@@@@@@@@@ CATEGORY LISTINGS @@@@@@@@@@@@@@@@@@@@@@@@
 // Get all listings from a category
-// router.get('/c/:category', catchErrors(async (req, res) => {
-//   var listings = await Listing.find({ category: req.params.category});
-//   if(listings){
-//     res.send(listings);
-//   } else {
-//     throw { message: "No listings found with this category tag."}
-//   }
-// }))
+router.get('/c/:category', catchErrors(async (req, res) => {
+  var catStr;
+  if(req.params.category.includes("-")){
+    var cat = req.params.category.split("-");
+    catStr = cat.join(" ");
+  } else {
+    catStr = req.params.category;
+  }
 
+  var listings = await Listing.find({ category: catStr});
+  if(listings){
+    res.send(listings);
+  } else {
+    throw { message: "No listings found with this category tag."}
+  }
+}))
+
+// Get number of listings in a category
+router.get('/c/:category/numberOf', catchErrors(async (req, res) => {
+  var catStr;
+  if(req.params.category.includes("-")){
+    var cat = req.params.category.split("-");
+    catStr = cat.join(" ");
+  } else {
+    catStr = req.params.category;
+  }
+
+  var listings = await Listing.find({ category: catStr});
+  if(listings){
+    res.send({"listingCount" : listings.length})
+  } else {
+    throw { message: "No listings found with this category tag."}
+  }
+}))
+
+
+
+// Get Popular Listings from a category 
+router.get('/c/:category/popular', catchErrors(async (req, res) => {
+  var catStr;
+  if(req.params.category.includes("-")){
+    var cat = req.params.category.split("-");
+    catStr = cat.join(" ");
+  } else {
+    catStr = req.params.category;
+  }
+
+  var listings = await Listing.find({ category: catStr}).sort({clicks: -1}).limit(5);
+
+  if(listings){
+    res.send(listings);
+  } else {
+    throw { message: "No listings found with this category tag."}
+  }
+}))
+
+// Get New Listings from a category 
+router.get('/c/:category/new', catchErrors(async (req, res) => {
+  var catStr;
+  if(req.params.category.includes("-")){
+    var cat = req.params.category.split("-");
+    catStr = cat.join(" ");
+  } else {
+    catStr = req.params.category;
+  }
+
+  var listings = await Listing.find({ category: catStr}).sort({dateAdded: -1}).limit(5);
+
+  if(listings){
+    res.send(listings);
+  } else {
+    throw { message: "No listings found with this category tag."}
+  }
+}))
+
+
+
+//@@@@@@@@@@@@@@@@@@@@@@@@ GENERATE LISTINGS @@@@@@@@@@@@@@@@@@@@@@@@
+// Generates a random listing
 router.post('/random', catchErrors(async (req, res) => {
   // var item = RandomListing.generateRandomListing();
   var item = randomListing.generateRandomListing();

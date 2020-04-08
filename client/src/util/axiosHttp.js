@@ -1,5 +1,6 @@
-import store from './store'
+// import store from '../store/index'
 import axios from 'axios'
+import cookies from 'vue-cookies'
 
 
 
@@ -10,7 +11,7 @@ export function httpAuth(){
       return status >= 200;
     },
     headers: {
-      "Authorization" : `Bearer ${$cookies.get("user_token")}`
+      "Authorization" : `Bearer ${cookies.get("user_token")}`
     }
   })
 }
