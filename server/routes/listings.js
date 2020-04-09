@@ -76,6 +76,7 @@ router.get('/c/:category', catchErrors(async (req, res) => {
   }
 
   var queryParams = [];
+  var sortParams = {};
 
   if(req.query.used){
     queryParams.push({ used: true})
@@ -86,9 +87,30 @@ router.get('/c/:category', catchErrors(async (req, res) => {
     queryParams.push({ used: false})
   }
 
+  if(req.query.lh){
+    // sortParams.sort = { price: +1}
+    sortParams.price = +1;
+  }
+  if(req.query.hl){
+    // sortParams.sort = { price: -1}
+    sortParams.price = -1;
+
+
+  }
+  if(req.query.recent){
+    sortParams.dateAdded = -1;
+
+  }
+
+  console.log(sortParams);
+
   //If there are no query parameters
   if(queryParams.length == 0){
-    var listings = await Listing.find({category: catStr});
+    // var listings = await Listing.find({category: catStr}, null, sortParams);
+    var listings = await Listing.find({category: catStr}, null, {sort: sortParams});
+
+
+
     if(!listings){
       throw {message: "There were no results found with your query parameters."}
     }
@@ -97,7 +119,9 @@ router.get('/c/:category', catchErrors(async (req, res) => {
   //If there are query parameters, AND them into the query
   if(queryParams.length > 0){
     queryParams.push({category: catStr})
-    var listings = await Listing.find({$and: queryParams})
+
+    var listings = await Listing.find({$and: queryParams}, null, {sort: sortParams})
+
     if(!listings){
       throw {message: "There were no results found with your query parameters."}
     }
@@ -109,7 +133,7 @@ router.get('/c/:category', catchErrors(async (req, res) => {
 
 
 // Get number of listings in a category
-router.get('/c/:category/numberOf', catchErrors(async (req, res) => {
+router.get('/c/:category/number-of', catchErrors(async (req, res) => {
   var catStr;
   if(req.params.category.includes("-")){
     var cat = req.params.category.split("-");

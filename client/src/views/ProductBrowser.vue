@@ -14,10 +14,13 @@
         <b-form-group class="mb-0">
           <b-form-radio-group>
             <b-form-radio v-model="selected" name="some-radios" value="mostRecent">Most Recent</b-form-radio>
-            <b-form-radio v-model="selected" name="some-radios" value="priceLowToHigh">Price Low to High</b-form-radio>
-            <b-form-radio v-model="selected" name="some-radios" value="priceHighToLow">Price High to Low</b-form-radio>
+            <b-form-radio v-model="selected" name="some-radios" value="lh">Price Low to High</b-form-radio>
+            <b-form-radio v-model="selected" name="some-radios" value="hl">Price High to Low</b-form-radio>
           </b-form-radio-group>
         </b-form-group>
+      </div>
+      <div>
+        <b-button @click="refetchProducts()">Filter Results</b-button>
       </div>
     </div>
     <div class="popular-products-container">
@@ -29,6 +32,9 @@
 
     <div class="all-listings-container">
       <h4>Some paginated all products</h4>
+      <ul>
+        <li v-for="(listing, index) in listingsArr" :key="index">{{ listing._id }}</li>
+      </ul>
     </div>
 
   </div>
@@ -50,6 +56,7 @@ export default {
         'background' : `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${require('@/assets/guitar-banner.jpg')})`,
         'background-size': 'cover'
       },
+      listingsArr: [],
       popularArr: [],
       usedOnly: false,
       selected: '',
@@ -57,7 +64,27 @@ export default {
   },
   methods: {
     refetchProducts: async function() {
-
+      try {
+        var queryStr = '';
+        if(this.usedOnly){
+          queryStr += 'used=true'
+        }
+        if(this.selected == 'hl'){
+          queryStr += '&hl=true'
+        }
+        if(this.selected == 'lh'){
+          queryStr += '&lh=true'
+        }
+        console.log(queryStr);
+        var query = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/electric-guitar/?`+queryStr);
+        if(!query){
+          throw "Query failure"
+        }
+        this.listingsArr = query.data;
+        console.log(this.listingsArr);
+      }catch(err){
+        console.log(err);
+      }
     }
   },
   created: async function() {

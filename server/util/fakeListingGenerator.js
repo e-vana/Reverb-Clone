@@ -82,6 +82,7 @@ const generateRandomListing = function(){
   guitar.videoLink = faker.internet.url();
   guitar.featured = faker.random.boolean();
   guitar.clicks = getRandomInt(0, 10000);
+  // guitar.clicks = 500;
 
   return(guitar);
 
