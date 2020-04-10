@@ -2,6 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const Listing = require("../models/listing");
+const Category = require("../models/category");
+
 const tokenBlacklist = require("../models/tokenBlacklist");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -66,6 +68,7 @@ router.get('/:id', catchErrors(async (req, res) => {
 
 //@@@@@@@@@@@@@@@@@@@@@@@@ CATEGORY LISTINGS @@@@@@@@@@@@@@@@@@@@@@@@
 // Get all listings from a category
+// Sorting and Params logic
 router.get('/c/:category', catchErrors(async (req, res) => {
   var catStr;
   if(req.params.category.includes("-")){
@@ -122,6 +125,7 @@ router.get('/c/:category', catchErrors(async (req, res) => {
   }
 
 }))
+
 
 
 
@@ -182,6 +186,8 @@ router.get('/c/:category/new', catchErrors(async (req, res) => {
     throw { message: "No listings found with this category tag."}
   }
 }))
+
+
 
 
 

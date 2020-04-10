@@ -69,6 +69,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
+  max-width:100%; 
+
 }
 .navigation-links {
   display: flex;

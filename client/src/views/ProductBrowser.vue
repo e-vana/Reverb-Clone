@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="category-bannerhead" :style="categoryBannerStyle">
+    <div class="category-bannerhead" :style="computedCategoryBannerUrl">
       <h2>{{ categoryString }}</h2>
     </div>
 
@@ -31,7 +31,7 @@
     </div>
 
     <div class="all-listings-container">
-      <h4 class="all-listings-container-title">All Products</h4>
+      <h4 class="all-listings-container-title">All {{ categoryString }}</h4>
       <ul>
         <li v-for="(listing, index) in listingsArr" :key="index">{{ listing._id }}</li>
       </ul>
@@ -52,14 +52,15 @@ export default {
   },
   data(){
     return {
-      categoryBannerStyle: {
-        'background' : `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${require('@/assets/guitar-banner.jpg')})`,
-        'background-size': 'cover'
-      },
+      // categoryBannerStyle: {
+      //   'background' : `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("${this.computedCategoryBannerUrl}")`,
+      //   'background-size': 'cover'
+      // },
       listingsArr: [],
       popularArr: [],
       usedOnly: false,
       selected: '',
+      categoryBannerUrl: ''
     }
   },
   methods: {
@@ -93,7 +94,13 @@ export default {
   },
   created: async function() {
     try {
-      console.log(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/popular`)
+      // console.log(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/popular`)
+
+      // Fetch the banner image URL
+      var categoryBannerUrl = await http().get(`${process.env.VUE_APP_API_URL}/api/categories/${this.$route.params.category}/header-url`);
+      this.categoryBannerUrl = categoryBannerUrl.data.url;
+
+      // Fetch the Popular Items in category
       var popularInCategory = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/popular`);
       if(!popularInCategory){
         throw "Error fetching popular items in this category."
@@ -108,8 +115,15 @@ export default {
     categoryString() {
       var category = this.$route.params.category.split("-");
       var catString = category.join(" ");
-      // need to capitalize first letter
       return catString;
+    },
+    computedCategoryBannerUrl() {
+      var BannerUrlStyle = {
+        'background' : `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("${this.categoryBannerUrl}")`,
+        'background-size': 'cover'
+      }
+
+      return BannerUrlStyle;
     }
   }
 }
