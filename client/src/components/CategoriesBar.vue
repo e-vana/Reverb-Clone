@@ -1,7 +1,7 @@
 <template>
   <div class="categories-bar">
     <ul>
-      <li v-for="(item, index) in catArray" :key="index">{{ item.name }}</li>
+      <li v-for="(item, index) in catArray" :key="index"><router-link :to="item.link">{{ item.name }}</router-link></li>
     </ul>
   </div>
 </template>

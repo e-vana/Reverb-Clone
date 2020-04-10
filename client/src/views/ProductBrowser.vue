@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="category-bannerhead" :style="categoryBannerStyle">
-      <h2>Electric Guitars</h2>
+      <h2>{{ categoryString }}</h2>
     </div>
 
     <div class="filters-bar">
@@ -13,7 +13,7 @@
       <div>
         <b-form-group class="mb-0">
           <b-form-radio-group>
-            <b-form-radio v-model="selected" name="some-radios" value="mostRecent">Most Recent</b-form-radio>
+            <b-form-radio v-model="selected" name="some-radios" value="recent">Most Recent</b-form-radio>
             <b-form-radio v-model="selected" name="some-radios" value="lh">Price Low to High</b-form-radio>
             <b-form-radio v-model="selected" name="some-radios" value="hl">Price High to Low</b-form-radio>
           </b-form-radio-group>
@@ -24,14 +24,14 @@
       </div>
     </div>
     <div class="popular-products-container">
-      <h4>Popular Products</h4>
+      <h4 class="popular-products-title">Popular {{ categoryString }}</h4>
       <ul>
         <li v-for="(product, index) in popularArr" :key="index">{{ product._id }}</li>
       </ul>
     </div>
 
     <div class="all-listings-container">
-      <h4>Some paginated all products</h4>
+      <h4 class="all-listings-container-title">All Products</h4>
       <ul>
         <li v-for="(listing, index) in listingsArr" :key="index">{{ listing._id }}</li>
       </ul>
@@ -75,6 +75,10 @@ export default {
         if(this.selected == 'lh'){
           queryStr += '&lh=true'
         }
+        if(this.selected == 'recent'){
+          queryStr += '&recent=true'
+        }
+
         console.log(queryStr);
         var query = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/electric-guitar/?`+queryStr);
         if(!query){
@@ -89,8 +93,8 @@ export default {
   },
   created: async function() {
     try {
-
-      var popularInCategory = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/electric-guitar/popular`);
+      console.log(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/popular`)
+      var popularInCategory = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/popular`);
       if(!popularInCategory){
         throw "Error fetching popular items in this category."
       }
@@ -98,6 +102,14 @@ export default {
 
     } catch(err){
       console.log(err);
+    }
+  },
+  computed:{
+    categoryString() {
+      var category = this.$route.params.category.split("-");
+      var catString = category.join(" ");
+      // need to capitalize first letter
+      return catString;
     }
   }
 }
@@ -117,6 +129,10 @@ export default {
   font-size: 42px;
   text-transform: capitalize;
   color: white;
+}
+
+.all-listings-container-title, .popular-products-container {
+  text-transform: capitalize;
 }
 
 .filters-bar {

@@ -82,27 +82,20 @@ router.get('/c/:category', catchErrors(async (req, res) => {
     queryParams.push({ used: true})
   }
 
-
   if(req.query.new){
     queryParams.push({ used: false})
   }
 
   if(req.query.lh){
-    // sortParams.sort = { price: +1}
     sortParams.price = +1;
   }
   if(req.query.hl){
-    // sortParams.sort = { price: -1}
     sortParams.price = -1;
-
-
   }
   if(req.query.recent){
     sortParams.dateAdded = -1;
-
   }
 
-  console.log(sortParams);
 
   //If there are no query parameters
   if(queryParams.length == 0){

@@ -4,7 +4,7 @@
     <NavigationBar/>
     <CategoriesBar/>
     <!-- <b-progress class="loaderPos" v-if="this.$store.getters.isLoading" :value="this.$store.getters.getLoadingPercent" :max="100" animated></b-progress> -->
-    <router-view/>
+    <router-view :key="$route.fullPath"/>
   </div>
 </template>
 <script>

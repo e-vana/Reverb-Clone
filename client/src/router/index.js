@@ -12,7 +12,7 @@ Vue.use(VueRouter)
     component: Home
   },
   {
-    path: '/product',
+    path: '/c/:category',
     name: 'ProductBrowser',
     component: ProductBrowser
   }
