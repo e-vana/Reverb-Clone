@@ -88,6 +88,11 @@ let listingSchema = mongoose.Schema({
     type: Number,
     required: false,
     default: 0
+  },
+  sold: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 })
 

@@ -25,9 +25,18 @@
     </div>
     <div class="popular-products-container">
       <h4 class="popular-products-title">Popular {{ categoryString }}</h4>
-      <ul>
-        <li v-for="(product, index) in popularArr" :key="index">{{ product._id }}</li>
-      </ul>
+        <div class="horizontal-card-container">
+          <!-- <b-card-group deck> -->
+            <ItemCard 
+              v-for="(product, index) in popularArr"
+              :key="index"
+              :imageUrl="product.images[0]"
+              :price="product.price"
+              :itemName="product.listingTitle"
+              :condition="product.condition"
+            />
+          <!-- </b-card-group> -->
+        </div>
     </div>
 
     <div class="all-listings-container">
@@ -43,12 +52,14 @@
 <script>
 
 import {http} from '../util/axiosHttp.js';
+import ItemCard from '../components/ItemCard'
 // import FiltersBar from '../components/FiltersBar';
 
 export default {
   name: "ProductBrowser",
   components: {
     // FiltersBar
+    ItemCard
   },
   data(){
     return {
@@ -158,5 +169,14 @@ export default {
   border-bottom: 1px solid $BorderGray;
   font-size: $FontSmaller;
   text-align: center;
+}
+.popular-products-container{
+  padding: 20px;
+}
+
+.horizontal-card-container {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 </style>
