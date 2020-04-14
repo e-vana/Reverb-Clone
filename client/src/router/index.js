@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import ProductBrowser from '../views/ProductBrowser.vue'
+import FilteredProductBrowser from '../views/FilteredProductBrowser.vue'
+
 
 Vue.use(VueRouter)
 
@@ -15,7 +17,13 @@ Vue.use(VueRouter)
     path: '/c/:category',
     name: 'ProductBrowser',
     component: ProductBrowser
-  }
+  },
+  {
+    path: '/c/:category/all',
+    name: 'FilteredProductBrowser',
+    component: FilteredProductBrowser
+  },
+
 ]
 
 const router = new VueRouter({

@@ -4,7 +4,7 @@
       <h2>{{ categoryString }}</h2>
     </div>
 
-    <!-- <div class="filters-bar">
+    <div class="filters-bar">
       <div >
         <b-form-checkbox class="mr-4"  v-model="usedOnly" name="check-button" switch>
           Used Only
@@ -22,62 +22,21 @@
       <div>
         <b-button @click="refetchProducts()">Filter Results</b-button>
       </div>
-    </div> -->
-    <div class="all-products-container">
-      <div class="popular-products-container">
-        <h4 class="popular-products-title">Popular {{ categoryString }} </h4>
-        <p>
-          <router-link :to="`/c/${this.$route.params.category}/all/?popular=true`">View All </router-link>
-        </p>
-
-        
-          <div class="horizontal-card-container">
-            <ItemCard 
-              v-for="(product, index) in popularArr"
-              :key="index"
-              :imageUrl="product.images[0]"
-              :price="product.price"
-              :itemName="product.listingTitle"
-              :condition="product.condition"
-            />
-          </div>
-      </div>
-
-      <div class="popular-products-container">
-        <h4 class="popular-products-title">New {{ categoryString }}</h4>
-        <p>
-          <router-link :to="`/c/${this.$route.params.category}/all/?used=false`">View All </router-link>
-        </p>
-          <div class="horizontal-card-container">
-            <ItemCard 
-              v-for="(product, index) in newArr"
-              :key="index"
-              :imageUrl="product.images[0]"
-              :price="product.price"
-              :itemName="product.listingTitle"
-              :condition="product.condition"
-            />
-          </div>
-      </div>
-
-      <div class="popular-products-container">
-        <h4 class="popular-products-title">Used {{ categoryString }}</h4>
-        <p>
-          <router-link :to="`/c/${this.$route.params.category}/all/?used=true`">View All </router-link>
-        </p>
-          <div class="horizontal-card-container">
-            <ItemCard 
-              v-for="(product, index) in usedArr"
-              :key="index"
-              :imageUrl="product.images[0]"
-              :price="product.price"
-              :itemName="product.listingTitle"
-              :condition="product.condition"
-            />
-          </div>
-      </div>
     </div>
 
+      <div class=products-filtered-container>
+      <h4 id="all-listings-header" class="popular-products-title">All {{ categoryString }}</h4>
+
+        <ItemCard 
+          v-for="(product, index) in popularArr"
+          :key="index"
+          :imageUrl="product.images[0]"
+          :price="product.price"
+          :itemName="product.listingTitle"
+          :condition="product.condition"
+          style="margin: 0px 10px"
+        />
+      </div>
 
   </div>
 </template>
@@ -89,7 +48,7 @@ import ItemCard from '../components/ItemCard'
 // import FiltersBar from '../components/FiltersBar';
 
 export default {
-  name: "ProductBrowser",
+  name: "FilteredProductBrowser",
   components: {
     // FiltersBar
     ItemCard
@@ -132,12 +91,30 @@ export default {
       }catch(err){
         console.log(err);
       }
+    },
+    firstItemPadding: function() {
+      var firstItem = document.getElementsByClassName('item-card')[0];
+      var distanceToLeft = window.pageXOffset + firstItem.getBoundingClientRect().left;
+      var heading = document.getElementById("all-listings-header");
+      heading.style.paddingLeft = `${distanceToLeft}px`;
+      console.log(distanceToLeft)
     }
   },
   created: async function() {
     try {
+
+      // Set initial loader state
       this.$store.dispatch("setLoading", true);
       this.$store.dispatch("setLoadingPercentage", 0);
+
+
+      // Add event listener for Header LEFT Padding
+      window.addEventListener("resize", this.firstItemPadding)
+
+
+
+
+
 
       // Fetch the banner image URL
       var categoryBannerUrl = await http().get(`${process.env.VUE_APP_API_URL}/api/categories/${this.$route.params.category}/header-url`);
@@ -152,6 +129,8 @@ export default {
       }
       this.popularArr = popularInCategory.data;
       this.$store.dispatch("setLoadingPercentage", 40);
+
+
 
 
       // Fetch the New Items in category
@@ -170,9 +149,12 @@ export default {
       }
       this.usedArr = usedInCategory.data;
 
+
+
+
+
       this.$store.dispatch("setLoadingPercentage", 80);
       this.$store.dispatch("setLoading", false);
-
 
     } catch(err){
       console.log(err);
@@ -191,7 +173,7 @@ export default {
       }
 
       return BannerUrlStyle;
-    }
+    },
   }
 }
 </script>
@@ -237,7 +219,7 @@ export default {
   padding: 20px 80px;
 
 }
-.all-listings-container-title, .popular-products-container {
+.all-listings-container-title, .popular-products-container, #all-listings-header {
   text-transform: capitalize;
 }
 .popular-products-container {
@@ -260,7 +242,17 @@ export default {
   flex-wrap: nowrap;
   overflow-x: auto;
 }
-
-
+.popular-products-title {
+  width: 100%;
+  display: block;
+}
+.products-filtered-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.products-filtered-parent-container {
+  padding: 40px;
+}
 
 </style>
