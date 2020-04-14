@@ -35,6 +35,7 @@ export default {
 
 <style lang="scss">
 .filters-bar {
+  background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,6 +44,7 @@ export default {
   border-bottom: 1px solid $BorderGray;
   font-size: $FontSmaller;
   text-align: center;
+
 }
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!this.$store.getters.isLoading" class="product-browser">
     <div class="category-bannerhead" :style="computedCategoryBannerUrl">
       <h2>{{ categoryString }}</h2>
     </div>
@@ -23,10 +23,10 @@
         <b-button @click="refetchProducts()">Filter Results</b-button>
       </div>
     </div>
-    <div class="popular-products-container">
-      <h4 class="popular-products-title">Popular {{ categoryString }}</h4>
-        <div class="horizontal-card-container">
-          <!-- <b-card-group deck> -->
+    <div class="all-products-container">
+      <div class="popular-products-container">
+        <h4 class="popular-products-title">Popular {{ categoryString }}</h4>
+          <div class="horizontal-card-container">
             <ItemCard 
               v-for="(product, index) in popularArr"
               :key="index"
@@ -35,16 +35,38 @@
               :itemName="product.listingTitle"
               :condition="product.condition"
             />
-          <!-- </b-card-group> -->
-        </div>
+          </div>
+      </div>
+
+      <div class="popular-products-container">
+        <h4 class="popular-products-title">New {{ categoryString }}</h4>
+          <div class="horizontal-card-container">
+            <ItemCard 
+              v-for="(product, index) in newArr"
+              :key="index"
+              :imageUrl="product.images[0]"
+              :price="product.price"
+              :itemName="product.listingTitle"
+              :condition="product.condition"
+            />
+          </div>
+      </div>
+
+      <div class="popular-products-container">
+        <h4 class="popular-products-title">Used {{ categoryString }}</h4>
+          <div class="horizontal-card-container">
+            <ItemCard 
+              v-for="(product, index) in usedArr"
+              :key="index"
+              :imageUrl="product.images[0]"
+              :price="product.price"
+              :itemName="product.listingTitle"
+              :condition="product.condition"
+            />
+          </div>
+      </div>
     </div>
 
-    <div class="all-listings-container">
-      <h4 class="all-listings-container-title">All {{ categoryString }}</h4>
-      <ul>
-        <li v-for="(listing, index) in listingsArr" :key="index">{{ listing._id }}</li>
-      </ul>
-    </div>
 
   </div>
 </template>
@@ -63,12 +85,10 @@ export default {
   },
   data(){
     return {
-      // categoryBannerStyle: {
-      //   'background' : `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("${this.computedCategoryBannerUrl}")`,
-      //   'background-size': 'cover'
-      // },
       listingsArr: [],
       popularArr: [],
+      newArr: [],
+      usedArr: [],
       usedOnly: false,
       selected: '',
       categoryBannerUrl: ''
@@ -92,7 +112,7 @@ export default {
         }
 
         console.log(queryStr);
-        var query = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/electric-guitar/?`+queryStr);
+        var query = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/electric-guitars/?`+queryStr);
         if(!query){
           throw "Query failure"
         }
@@ -105,11 +125,14 @@ export default {
   },
   created: async function() {
     try {
-      // console.log(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/popular`)
+      this.$store.dispatch("setLoading", true);
+      this.$store.dispatch("setLoadingPercentage", 0);
 
       // Fetch the banner image URL
       var categoryBannerUrl = await http().get(`${process.env.VUE_APP_API_URL}/api/categories/${this.$route.params.category}/header-url`);
       this.categoryBannerUrl = categoryBannerUrl.data.url;
+      this.$store.dispatch("setLoadingPercentage", 20);
+
 
       // Fetch the Popular Items in category
       var popularInCategory = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/popular`);
@@ -117,6 +140,28 @@ export default {
         throw "Error fetching popular items in this category."
       }
       this.popularArr = popularInCategory.data;
+      this.$store.dispatch("setLoadingPercentage", 40);
+
+
+      // Fetch the New Items in category
+      var newInCategory = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/new`);
+      if(!newInCategory){
+        throw "Error fetching popular items in this category."
+      }
+      this.newArr = newInCategory.data;
+      this.$store.dispatch("setLoadingPercentage", 60);
+
+
+      // Fetch the Used Items in category
+      var usedInCategory = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/used`);
+      if(!usedInCategory){
+        throw "Error fetching popular items in this category."
+      }
+      this.usedArr = usedInCategory.data;
+
+      this.$store.dispatch("setLoadingPercentage", 80);
+      this.$store.dispatch("setLoading", false);
+
 
     } catch(err){
       console.log(err);
@@ -142,6 +187,27 @@ export default {
 
 <style lang="scss">
 
+// ScrollBar Styling
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(223, 223, 223); 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $Secondary;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: lighten($Secondary, 10%)
+}
+
+
 .category-bannerhead {
   height: 200px;
   display: flex;
@@ -156,8 +222,15 @@ export default {
   color: white;
 }
 
+.all-products-container {
+  padding: 20px 80px;
+
+}
 .all-listings-container-title, .popular-products-container {
   text-transform: capitalize;
+}
+.popular-products-container {
+  margin-bottom: 20px;
 }
 
 .filters-bar {
@@ -170,13 +243,13 @@ export default {
   font-size: $FontSmaller;
   text-align: center;
 }
-.popular-products-container{
-  padding: 20px;
-}
 
 .horizontal-card-container {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
 }
+
+
+
 </style>

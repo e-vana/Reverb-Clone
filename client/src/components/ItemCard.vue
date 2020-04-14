@@ -1,37 +1,29 @@
 <template>
-  <!-- <b-card
-    :title="itemName"
-    :img-src="imageUrl"
-    img-top
-    title-tag="p"
-    class="item-card"
-  >
-    <b-card-text>
-      <p>
-       ${{ price }}
-      </p>
-      <p>{{ condition }}</p>
-    </b-card-text>
-
-  </b-card> -->
   <div class="item-card">
     <div class="item-card-header">
       <img :src="imageUrl" alt="">
     </div>
-    <div class="item-card-footer">
-      <p>
-        {{ itemName }}
-      </p>
-      <p>
-        ${{ price }}
-      </p>
+    <div class="item-card-footer" >
+      <div class="item-card-footer-content">
+          <h5>{{ itemName }}</h5>
+
+
+      </div>
+      <div class="item-card-footer-content item-card-pricing">
+        <div class="item-card-price">
+          <b>${{ price }}</b>
+        </div>
+        <div>
+          {{ condition }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Item Card",
+  name: "ItemCard",
   props: {
     imageUrl: String,
     price: Number,
@@ -42,22 +34,37 @@ export default {
 </script>
 
 <style>
-.item-card h4 {
-  font-size: 1rem;
+
+.item-card {
+  min-width: 250px;
+  max-width: 250px;
+  margin-right: 20px;
+  /* margin-bottom: 20px; */
+  background-color: white;
 }
 .item-card-header img {
-  max-height: 225px;
-  max-width: 225px;
   width: 100%;
 }
-.item-card {
-  flex: 0 0 auto;
-  margin-right: 20px;
-  max-width: 225px;
+.item-card-footer {
   display: flex;
-  flex-wrap: wrap;
-  /* align-content: space-between; */
   align-content: space-between;
+  flex-wrap: wrap;
+  height: 130px;
+  padding: 10px 20px;
+
 }
 
+.item-card-footer-content {
+  width: 250px; 
+}
+.item-card-footer-content h5 {
+  text-align: center;
+}
+.item-card-pricing {
+  display: flex;
+  justify-content: space-between;
+}
+.item-card-price {
+  font-size: 18px;
+}
 </style>

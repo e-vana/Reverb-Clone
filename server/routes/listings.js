@@ -176,7 +176,7 @@ router.get('/c/:category/new', catchErrors(async (req, res) => {
     catStr = req.params.category;
   }
 
-  var listings = await Listing.find({ category: catStr}).sort({dateAdded: -1}).limit(5);
+  var listings = await Listing.find({ $and: [{category: catStr}, {used: false}]}).sort({dateAdded: -1}).limit(10);
 
   if(listings){
     res.send(listings);
@@ -185,6 +185,25 @@ router.get('/c/:category/new', catchErrors(async (req, res) => {
   }
 }))
 
+// Get Used Listings from a category 
+router.get('/c/:category/used', catchErrors(async (req, res) => {
+  var catStr;
+  if(req.params.category.includes("-")){
+    var cat = req.params.category.split("-");
+    catStr = cat.join(" ");
+  } else {
+    catStr = req.params.category;
+  }
+
+  var listings = await Listing.find({ $and: [{category: catStr}, {used: true}]}).sort({dateAdded: -1}).limit(10);
+
+
+  if(listings){
+    res.send(listings);
+  } else {
+    throw { message: "No listings found with this category tag."}
+  }
+}))
 
 
 

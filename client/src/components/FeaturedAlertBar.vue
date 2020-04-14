@@ -25,7 +25,7 @@ export default {
 
 <style lang="scss">
 .alertbar {
-  width: 100vw;
+  width: 100%;
   background-color: $Secondary;
   padding: 10px 20px;
   display: flex;
