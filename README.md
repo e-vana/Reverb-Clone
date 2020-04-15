@@ -1,9 +1,8 @@
-# Vue-Login-Template-Public
+# Reverb.com Clone
 
-This application will eventually be a mock storefront utilizing VueJs and Express.  Eventual plans involve adding items to carts, a mock checkout flow using Stripe, and adding administrative tools to add and remove items from the store front.  It's built on top of another application of mine, Vue-Login-Template-Public.
+This application is a recreation of the instrument selling website Reverb.com.  I am simplifying some of the features, but most of the primary functions of the site will eventually be recreated.  This application is built in Vue, Vuex, Vue Router, Express, Node JS and Mongo DB.
 
-![header-img](https://i.imgur.com/Q7P3X3A.png)
-
+/
 ## Getting Started
 
 Download the repository and unpack.  There are two primary folders, the 'Client' folder and the 'Server' folder which are the front end and back end, respectively.  
