@@ -28,7 +28,7 @@
       <h4 id="all-listings-header" class="popular-products-title">All {{ categoryString }}</h4>
 
         <ItemCard 
-          v-for="(product, index) in popularArr"
+          v-for="(product, index) in listingsArr"
           :key="index"
           :imageUrl="product.images[0]"
           :price="product.price"
@@ -56,9 +56,6 @@ export default {
   data(){
     return {
       listingsArr: [],
-      popularArr: [],
-      newArr: [],
-      usedArr: [],
       usedOnly: false,
       selected: '',
       categoryBannerUrl: ''
@@ -80,25 +77,20 @@ export default {
         if(this.selected == 'recent'){
           queryStr += '&recent=true'
         }
+        // Could use the router ({query: }) object instead of building the full path
+        this.$router.push({path: `/c/${this.$route.params.category}/all/?${queryStr}`})
 
-        console.log(queryStr);
-        var query = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/electric-guitars/?`+queryStr);
-        if(!query){
-          throw "Query failure"
-        }
-        this.listingsArr = query.data;
-        console.log(this.listingsArr);
       }catch(err){
-        console.log(err);
+        console.log(err)
       }
-    },
-    firstItemPadding: function() {
-      var firstItem = document.getElementsByClassName('item-card')[0];
-      var distanceToLeft = window.pageXOffset + firstItem.getBoundingClientRect().left;
-      var heading = document.getElementById("all-listings-header");
-      heading.style.paddingLeft = `${distanceToLeft}px`;
-      console.log(distanceToLeft)
     }
+  },
+  updated: function() {
+    // Set the padding for the category header, content based on flex dimensions
+    var firstItem = document.getElementsByClassName('item-card')[0];
+    var distanceToLeft = window.pageXOffset + firstItem.getBoundingClientRect().left;
+    var heading = document.getElementById("all-listings-header");
+    heading.style.paddingLeft = `${distanceToLeft}px`;
   },
   created: async function() {
     try {
@@ -107,52 +99,23 @@ export default {
       this.$store.dispatch("setLoading", true);
       this.$store.dispatch("setLoadingPercentage", 0);
 
-
-      // Add event listener for Header LEFT Padding
-      window.addEventListener("resize", this.firstItemPadding)
-
-
-
-
-
-
       // Fetch the banner image URL
       var categoryBannerUrl = await http().get(`${process.env.VUE_APP_API_URL}/api/categories/${this.$route.params.category}/header-url`);
       this.categoryBannerUrl = categoryBannerUrl.data.url;
       this.$store.dispatch("setLoadingPercentage", 20);
 
 
-      // Fetch the Popular Items in category
-      var popularInCategory = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/popular`);
-      if(!popularInCategory){
-        throw "Error fetching popular items in this category."
+      var queryString = Object.keys(this.$route.query).map(key => key + '=' + this.$route.query[key]).join('&');
+      console.log(queryString);
+
+      // Fetch the item based on query parameters
+      var filteredProduct = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/?${queryString}`)
+      if(!filteredProduct){
+        throw "No listing found with these parameters."
       }
-      this.popularArr = popularInCategory.data;
+      this.listingsArr = filteredProduct.data;
+
       this.$store.dispatch("setLoadingPercentage", 40);
-
-
-
-
-      // Fetch the New Items in category
-      var newInCategory = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/new`);
-      if(!newInCategory){
-        throw "Error fetching popular items in this category."
-      }
-      this.newArr = newInCategory.data;
-      this.$store.dispatch("setLoadingPercentage", 60);
-
-
-      // Fetch the Used Items in category
-      var usedInCategory = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/used`);
-      if(!usedInCategory){
-        throw "Error fetching popular items in this category."
-      }
-      this.usedArr = usedInCategory.data;
-
-
-
-
-
       this.$store.dispatch("setLoadingPercentage", 80);
       this.$store.dispatch("setLoading", false);
 

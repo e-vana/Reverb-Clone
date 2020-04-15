@@ -192,6 +192,31 @@ export default {
 
       return BannerUrlStyle;
     }
+  },
+  beforeRouteUpdate: async function (to, from, next) {
+      try {
+        console.log("working")
+        // Set Loading State
+        this.$store.dispatch("setLoading", true);
+        this.$store.dispatch("setLoadingPercentage", 25);
+
+        // Navigation guard when going from one category to another, wont work on router object because it's the same component?
+        var listings = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${to.params.category}`);  
+
+        this.$store.dispatch("setLoadingPercentage", 50);
+
+        if(listings.data.length == 0){
+          this.$store.dispatch("setLoadingPercentage", 100);
+          this.$store.dispatch("setLoading", false);
+          next(`/c/${to.params.category}/no-listings`);
+        } else{
+          this.$store.dispatch("setLoadingPercentage", 100);
+          this.$store.dispatch("setLoading", false);
+          next();
+        }
+      }catch(err){
+        console.log(err)
+      }
   }
 }
 </script>

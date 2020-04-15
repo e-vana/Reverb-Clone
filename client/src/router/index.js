@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import {http} from '../util/axiosHttp.js';
+
 import ProductBrowser from '../views/ProductBrowser.vue'
 import FilteredProductBrowser from '../views/FilteredProductBrowser.vue'
+import NoListings from '../views/NoListings.vue'
 
 
 Vue.use(VueRouter)
@@ -16,12 +19,31 @@ Vue.use(VueRouter)
   {
     path: '/c/:category',
     name: 'ProductBrowser',
-    component: ProductBrowser
+    component: ProductBrowser,
+    beforeEnter: async (to, from, next) => {
+      try {
+        console.log("working")
+        var listings = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${to.params.category}`);
+        console.log(listings);
+        if(listings.data.length == 0){
+          next(`/c/${to.params.category}/no-listings`);
+        } else{
+          next();
+        }
+      }catch(err){
+        console.log(err)
+      }
+    }
   },
   {
     path: '/c/:category/all',
     name: 'FilteredProductBrowser',
     component: FilteredProductBrowser
+  },
+  {
+    path: '/c/:category/no-listings',
+    name: 'NoListings',
+    component: NoListings
   },
 
 ]

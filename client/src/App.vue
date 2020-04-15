@@ -4,7 +4,12 @@
     <NavigationBar/>
     <CategoriesBar/>
     <b-progress class="loaderPos" v-if="this.$store.getters.isLoading" :value="this.$store.getters.getLoadingPercentage" :max="100" animated></b-progress>
-    <router-view :key="$route.fullPath"/>
+
+    <!-- <transition name="fade" mode="out-in"> -->
+      <router-view :key="$route.fullPath"/>
+      <!-- <router-view/> -->
+
+    <!-- </transition> -->
   </div>
 </template>
 <script>
@@ -23,6 +28,10 @@ export default {
 }
 </script>
 <style lang="scss">
-#app { 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
