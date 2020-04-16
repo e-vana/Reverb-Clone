@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <h2>There doesnt appear to be any listings in {{ categoryString }}.</h2>
-    <p>Be the first one to add a listing to this category by using the sell feature!</p>
+  <div class="no-listings-container">
+    <div>
+      <h2>There doesnt appear to be any listings in {{ categoryString }}.</h2>
+      <p>Be the first one to add a listing to this category by using the sell feature!</p>
+    </div>
+
   </div>
 </template>
 
@@ -21,4 +24,12 @@ export default {
 
 <style>
 
+.no-listings-container {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  height: 400px;
+  align-items: center;
+  padding: 40px;
+}
 </style>

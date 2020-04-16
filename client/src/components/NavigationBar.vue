@@ -3,7 +3,7 @@
     <div class="navigation">
 
       <div class="navigation-brand">
-        {{ APP_NAME }}
+        <router-link to="/">{{ APP_NAME }}</router-link>
       </div>
 
       <div class="navigation-search">
@@ -136,5 +136,8 @@ export default {
   border: 1px solid $Secondary;
 }
 
-
+.navigation-brand {
+  font-weight: bold;
+  font-size: 18px;
+}
 </style>

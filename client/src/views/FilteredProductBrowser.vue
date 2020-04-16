@@ -184,6 +184,7 @@ export default {
 }
 .all-listings-container-title, .popular-products-container, #all-listings-header {
   text-transform: capitalize;
+  padding: 20px 0px 10px 0px;
 }
 .popular-products-container {
   margin-bottom: 20px;
