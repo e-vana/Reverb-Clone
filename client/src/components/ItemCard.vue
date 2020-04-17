@@ -1,24 +1,26 @@
 <template>
-  <div class="item-card">
-    <div class="item-card-header">
-      <img :src="imageUrl" alt="">
-    </div>
-    <div class="item-card-footer" >
-      <div class="item-card-footer-content">
-          <h5>{{ itemName }}</h5>
+  <router-link :to="itemLink">
+    <div class="item-card">
+      <div class="item-card-header">
+        <img :src="imageUrl" alt="">
+      </div>
+      <div class="item-card-footer" >
+        <div class="item-card-footer-content">
+            <h5>{{ itemName }}</h5>
 
 
-      </div>
-      <div class="item-card-footer-content item-card-pricing">
-        <div class="item-card-price">
-          <b>${{ price }}</b>
         </div>
-        <div>
-          {{ condition }}
+        <div class="item-card-footer-content item-card-pricing">
+          <div class="item-card-price">
+            <b>${{ price }}</b>
+          </div>
+          <div>
+            {{ condition }}
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
@@ -28,7 +30,8 @@ export default {
     imageUrl: String,
     price: Number,
     condition: String,
-    itemName: String
+    itemName: String,
+    itemLink: String
   }
 }
 </script>

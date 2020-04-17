@@ -27,6 +27,14 @@
       <div class=products-filtered-container>
       <h4 id="all-listings-header" class="popular-products-title">All {{ categoryString }}</h4>
 
+        <!-- <ItemCard 
+          v-for="(product, index) in listingsArr"
+          :key="index"
+          :imageUrl="product.images[0]"
+          :price="product.price"
+          :itemName="product.listingTitle"
+          :condition="product.condition"
+        /> -->
         <ItemCard 
           v-for="(product, index) in listingsArr"
           :key="index"
@@ -34,6 +42,7 @@
           :price="product.price"
           :itemName="product.listingTitle"
           :condition="product.condition"
+          :itemLink="`/item/${product._id}`"
           style="margin: 0px 10px"
         />
       </div>

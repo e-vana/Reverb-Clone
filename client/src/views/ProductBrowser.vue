@@ -32,14 +32,15 @@
 
         
           <div class="horizontal-card-container">
-            <ItemCard 
-              v-for="(product, index) in popularArr"
-              :key="index"
-              :imageUrl="product.images[0]"
-              :price="product.price"
-              :itemName="product.listingTitle"
-              :condition="product.condition"
-            />
+            <!-- /item/number-hyphenated listing name -->
+              <ItemCard 
+                v-for="(product, index) in popularArr" :key="index"
+                :imageUrl="product.images[0]"
+                :price="product.price"
+                :itemName="product.listingTitle"
+                :condition="product.condition"
+                :itemLink="`/item/${product._id}`"
+              />
           </div>
       </div>
 
@@ -50,12 +51,12 @@
         </p>
           <div class="horizontal-card-container">
             <ItemCard 
-              v-for="(product, index) in newArr"
-              :key="index"
+              v-for="(product, index) in newArr" :key="index"
               :imageUrl="product.images[0]"
               :price="product.price"
               :itemName="product.listingTitle"
               :condition="product.condition"
+              :itemLink="`/item/${product._id}`"
             />
           </div>
       </div>
@@ -67,12 +68,12 @@
         </p>
           <div class="horizontal-card-container">
             <ItemCard 
-              v-for="(product, index) in usedArr"
-              :key="index"
+              v-for="(product, index) in usedArr" :key="index"
               :imageUrl="product.images[0]"
               :price="product.price"
               :itemName="product.listingTitle"
               :condition="product.condition"
+              :itemLink="`/item/${product._id}`"
             />
           </div>
       </div>
@@ -243,7 +244,9 @@ export default {
   background: lighten($Secondary, 10%)
 }
 
-
+a {
+  color: $FontColorPrimary
+}
 .category-bannerhead {
   height: 200px;
   display: flex;

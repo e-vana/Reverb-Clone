@@ -6,6 +6,8 @@ import {http} from '../util/axiosHttp.js';
 import ProductBrowser from '../views/ProductBrowser.vue'
 import FilteredProductBrowser from '../views/FilteredProductBrowser.vue'
 import NoListings from '../views/NoListings.vue'
+import SingleListing from '../views/SingleListing.vue'
+
 
 
 Vue.use(VueRouter)
@@ -45,6 +47,11 @@ Vue.use(VueRouter)
     name: 'NoListings',
     component: NoListings
   },
+  {
+    path: '/item/:listingId',
+    name: 'SingleListing',
+    component: SingleListing
+  }
 
 ]
 

@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     loading: false,
     loading_percentage: 0,
+    cart: []
   },
   mutations: {
     SET_LOADING: (state, payload) => {
@@ -14,6 +15,13 @@ export default new Vuex.Store({
     },
     SET_LOADING_PERCENTAGE: (state, payload) => {
       state.loading_percentage = payload;
+    },
+    SET_CART_ITEM: (state, payload) => {
+      state.cart.push(payload)
+    },
+    REMOVE_CART_ITEM: (state, payload) => {
+      //Where payload is index
+      state.cart.splice(payload, 1)
     }
   },
   actions: {
@@ -27,6 +35,13 @@ export default new Vuex.Store({
     },
     setLoadingToggle: (context) => {
       context.commit("SET_LOADING", !context.state.loading)
+    },
+    addToCart: (context, payload) => {
+      context.commit("SET_CART_ITEM", payload)
+    },
+    removeFromCart: (context, payload) => {
+      //where payload is index to be removed
+      context.commit("REMOVE_CART_ITEM", payload)
     }
   },
   getters: {
@@ -35,6 +50,12 @@ export default new Vuex.Store({
     },
     getLoadingPercentage: (state) => {
       return state.loading_percentage;
+    },
+    getCart: (state) => {
+      return state.cart;
+    },
+    getCartLength: (state) => {
+      return state.cart.length;
     }
   }
 

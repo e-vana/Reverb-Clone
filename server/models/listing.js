@@ -9,6 +9,10 @@ let listingSchema = mongoose.Schema({
     type: Date,
     required: true
   },
+  listingUrl: {
+    type: String,
+    required: false
+  },
   brand: {
     type: String,
     required: true

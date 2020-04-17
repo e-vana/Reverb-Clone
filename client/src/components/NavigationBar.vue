@@ -16,12 +16,43 @@
         <div class="navigation-sell">
           <b-button>SELL</b-button>
         </div>
-        <div v-for="(link, index) in navLinks" :key="index" class="navigation-link" >
+
+
+        <div class="navigation-link" >
           <div class="navigation-link-content">
-            <b-icon font-scale="2" :icon="link.icon"></b-icon>
-            <p>{{ link.name }}</p>
+            <b-icon font-scale="2" icon="star"></b-icon>
+            <p>Wish List</p>
           </div>
         </div>
+
+        <div class="navigation-link" >
+          <div class="navigation-link-content">
+            <b-icon font-scale="2" icon="grid"></b-icon>
+            <p>My Feed</p>
+          </div>
+        </div>
+
+        <div class="navigation-link" >
+          <div class="navigation-link-content">
+            <b-icon font-scale="2" icon="bag"></b-icon>
+            <p>Cart ({{ this.$store.getters.getCartLength }})</p>
+          </div>
+        </div>
+
+        <div class="navigation-link" >
+          <div class="navigation-link-content">
+            <b-icon font-scale="2" icon="bell"></b-icon>
+            <p>Notifications</p>
+          </div>
+        </div>
+
+        <div class="navigation-link" >
+          <div class="navigation-link-content">
+            <b-icon font-scale="2" icon="person"></b-icon>
+            <p>User</p>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -45,7 +76,7 @@ export default {
           icon: 'grid'
         },
         {
-          name: 'Cart',
+          name: `Cart`,
           icon: 'bag'
         },
         {
@@ -59,7 +90,8 @@ export default {
       ],
       search: '',
     }
-  }
+  },
+
 }
 </script>
 
