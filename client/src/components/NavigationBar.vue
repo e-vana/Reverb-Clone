@@ -14,7 +14,7 @@
 
       <div class="navigation-links">
         <div class="navigation-sell">
-          <b-button>SELL</b-button>
+          <router-link to="/sell"><b-button>SELL</b-button></router-link>
         </div>
 
 

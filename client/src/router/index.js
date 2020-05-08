@@ -7,6 +7,8 @@ import ProductBrowser from '../views/ProductBrowser.vue'
 import FilteredProductBrowser from '../views/FilteredProductBrowser.vue'
 import NoListings from '../views/NoListings.vue'
 import SingleListing from '../views/SingleListing.vue'
+import Sell from '../views/Sell.vue'
+
 
 
 
@@ -51,6 +53,11 @@ Vue.use(VueRouter)
     path: '/item/:listingId',
     name: 'SingleListing',
     component: SingleListing
+  },
+  {
+    path: '/sell',
+    name: 'Sell',
+    component: Sell
   }
 
 ]

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <FeaturedAlertBar/>
+    <!-- <FeaturedAlertBar/> -->
     <NavigationBar/>
     <CategoriesBar/>
     <b-progress class="loaderPos" v-if="this.$store.getters.isLoading" :value="this.$store.getters.getLoadingPercentage" :max="100" animated></b-progress>
@@ -14,7 +14,7 @@
 </template>
 <script>
 import NavigationBar from '@/components/NavigationBar'
-import FeaturedAlertBar from '@/components/FeaturedAlertBar'
+// import FeaturedAlertBar from '@/components/FeaturedAlertBar'
 import CategoriesBar from '@/components/CategoriesBar'
 
 
@@ -22,7 +22,7 @@ export default {
   name: "App",
   components: {
     NavigationBar,
-    FeaturedAlertBar,
+    // FeaturedAlertBar,
     CategoriesBar
   }
 }
