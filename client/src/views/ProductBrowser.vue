@@ -37,6 +37,7 @@
                 v-for="(product, index) in popularArr" :key="index"
                 :imageUrl="product.images[0]"
                 :price="product.price"
+                :shippingPrice="product.shippingPrice"
                 :itemName="product.listingTitle"
                 :condition="product.condition"
                 :itemLink="`/item/${product._id}`"
@@ -45,15 +46,16 @@
       </div>
 
       <div class="popular-products-container">
-        <h4 class="popular-products-title">New {{ categoryString }}</h4>
+        <h4 class="popular-products-title">Recently added {{ categoryString }} Listings</h4>
         <p>
-          <router-link :to="`/c/${this.$route.params.category}/all/?used=false`">View All </router-link>
+          <router-link :to="`/c/${this.$route.params.category}/all/?recent=true`">View All </router-link>
         </p>
           <div class="horizontal-card-container">
             <ItemCard 
-              v-for="(product, index) in newArr" :key="index"
+              v-for="(product, index) in recentArr" :key="index"
               :imageUrl="product.images[0]"
               :price="product.price"
+              :shippingPrice="product.shippingPrice"
               :itemName="product.listingTitle"
               :condition="product.condition"
               :itemLink="`/item/${product._id}`"
@@ -62,7 +64,25 @@
       </div>
 
       <div class="popular-products-container">
-        <h4 class="popular-products-title">Used {{ categoryString }}</h4>
+        <h4 class="popular-products-title">Recently Added New {{ categoryString }}</h4>
+        <p>
+          <router-link :to="`/c/${this.$route.params.category}/all/?used=false`">View All </router-link>
+        </p>
+          <div class="horizontal-card-container">
+            <ItemCard 
+              v-for="(product, index) in newArr" :key="index"
+              :imageUrl="product.images[0]"
+              :price="product.price"
+              :shippingPrice="product.shippingPrice"
+              :itemName="product.listingTitle"
+              :condition="product.condition"
+              :itemLink="`/item/${product._id}`"
+            />
+          </div>
+      </div>
+
+      <div class="popular-products-container">
+        <h4 class="popular-products-title">Recently Added Used {{ categoryString }}</h4>
         <p>
           <router-link :to="`/c/${this.$route.params.category}/all/?used=true`">View All </router-link>
         </p>
@@ -71,6 +91,7 @@
               v-for="(product, index) in usedArr" :key="index"
               :imageUrl="product.images[0]"
               :price="product.price"
+              :shippingPrice="product.shippingPrice"
               :itemName="product.listingTitle"
               :condition="product.condition"
               :itemLink="`/item/${product._id}`"
@@ -99,8 +120,9 @@ export default {
     return {
       listingsArr: [],
       popularArr: [],
-      newArr: [],
+      recentArr: [],
       usedArr: [],
+      newArr: [],
       usedOnly: false,
       selected: '',
       categoryBannerUrl: ''
@@ -154,13 +176,20 @@ export default {
       this.popularArr = popularInCategory.data;
       this.$store.dispatch("setLoadingPercentage", 40);
 
-
-      // Fetch the New Items in category
+      // Fetch the NEW recently added items in category
       var newInCategory = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/new`);
       if(!newInCategory){
         throw "Error fetching popular items in this category."
       }
       this.newArr = newInCategory.data;
+
+
+      // Fetch the Recent Items in category
+      var recentInCategory = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${this.$route.params.category}/recent`);
+      if(!recentInCategory){
+        throw "Error fetching popular items in this category."
+      }
+      this.recentArr = recentInCategory.data;
       this.$store.dispatch("setLoadingPercentage", 60);
 
 
@@ -196,7 +225,6 @@ export default {
   },
   beforeRouteUpdate: async function (to, from, next) {
       try {
-        console.log("working")
         // Set Loading State
         this.$store.dispatch("setLoading", true);
         this.$store.dispatch("setLoadingPercentage", 25);

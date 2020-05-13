@@ -185,6 +185,25 @@ router.get('/c/:category/new', catchErrors(async (req, res) => {
   }
 }))
 
+// Get RECENT listings from a category
+router.get('/c/:category/recent', catchErrors(async (req, res) => {
+  var catStr;
+  if(req.params.category.includes("-")){
+    var cat = req.params.category.split("-");
+    catStr = cat.join(" ");
+  } else {
+    catStr = req.params.category;
+  }
+
+  var listings = await Listing.find({ $and: [{category: catStr}]}).sort({dateAdded: -1}).limit(10);
+
+  if(listings){
+    res.send(listings);
+  } else {
+    throw { message: "No listings found with this category tag."}
+  }
+}))
+
 // Get Used Listings from a category 
 router.get('/c/:category/used', catchErrors(async (req, res) => {
   var catStr;
@@ -222,6 +241,29 @@ router.post('/random', catchErrors(async (req, res) => {
     throw { message: "Failed to save new item."}
   }
 
+}))
+
+router.post('/', catchErrors(async (req, res) => {
+  var payload = {
+    dateAdded: Date.now(),
+    brand: req.body.brand,
+    model: req.body.model,
+    condition: req.body.condition,
+    used: req.body.used,
+    listingTitle: req.body.listingTitle,
+    price: req.body.price,
+    shippingPrice: req.body.shippingPrice,
+    description: req.body.description,
+    category: req.body.category,
+  }
+  var newListing = new Listing(payload);
+  var saveListing = await newListing.save();
+  if(saveListing){
+    res.send(saveListing)
+  }else {
+    throw { message: "Failed to save new item."}
+    
+  }
 }))
 
 // end points for /items

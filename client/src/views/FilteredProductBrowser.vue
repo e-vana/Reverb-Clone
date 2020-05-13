@@ -25,7 +25,7 @@
     </div>
 
       <div class=products-filtered-container>
-      <h4 id="all-listings-header" class="popular-products-title">All {{ categoryString }}</h4>
+      <h4 id="all-listings-header" class="popular-products-title">All {{ categoryString }} {{ this.$route.query }}</h4>
 
         <!-- <ItemCard 
           v-for="(product, index) in listingsArr"

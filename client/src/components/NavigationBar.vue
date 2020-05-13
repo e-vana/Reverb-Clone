@@ -46,10 +46,28 @@
           </div>
         </div>
 
-        <div class="navigation-link" >
+        <router-link to="/login">
+        <div v-if="!$store.getters.isLoggedIn" class="navigation-link" >
+          <div class="navigation-link-content">
+            <b-icon font-scale="2" icon="person-bounding-box"></b-icon>
+            <p>Login</p>
+          </div>
+        </div>
+        </router-link>
+
+        <router-link to="/user">
+        <div v-if="$store.getters.isLoggedIn" class="navigation-link" >
           <div class="navigation-link-content">
             <b-icon font-scale="2" icon="person"></b-icon>
             <p>User</p>
+          </div>
+        </div>
+        </router-link>
+
+        <div @click="signOut" v-if="$store.getters.isLoggedIn" class="navigation-link" >
+          <div class="navigation-link-content">
+            <b-icon font-scale="2" icon="dash-circle"></b-icon>
+            <p>Sign Out</p>
           </div>
         </div>
 
@@ -91,6 +109,11 @@ export default {
       search: '',
     }
   },
+  methods: {
+    signOut: function() {
+      this.$store.dispatch("logoutUser");
+    }
+  }
 
 }
 </script>

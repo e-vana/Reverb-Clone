@@ -32,7 +32,7 @@
               <b-button-group>
                 <b-button variant=primary class="mr-2" @click="addToCart">Add to Cart</b-button>
                 <b-button  class="mr-2">Make an Offer</b-button>
-                <b-button >Watch</b-button>
+                <b-button @click="addToWatchList" >Watch</b-button>
               </b-button-group>
 
             </div>
@@ -65,7 +65,13 @@ export default {
       if(listing){
         this.listing = listing.data[0];
         this.images = listing.data[0].images;
+
+        // Add item to recently viewed items store
+        this.$store.dispatch("setRecentItem", this.listing);
       }
+
+
+      
     }catch(err){
       console.log(err)
     }
@@ -75,7 +81,9 @@ export default {
       console.log("fired")
       this.$store.dispatch("addToCart", this.listing._id)
       console.log(this.$store.getters.getCartLength);
-
+    },
+    addToWatchList: function(){ 
+      this.$store.dispatch("setWatchListItem", this.listing)
     }
   }
 }

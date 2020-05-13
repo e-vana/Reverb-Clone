@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store/index'
 import Home from '../views/Home.vue'
 import {http} from '../util/axiosHttp.js';
 
@@ -8,6 +9,9 @@ import FilteredProductBrowser from '../views/FilteredProductBrowser.vue'
 import NoListings from '../views/NoListings.vue'
 import SingleListing from '../views/SingleListing.vue'
 import Sell from '../views/Sell.vue'
+import Login from '../views/Login.vue'
+import User from '../views/User.vue'
+
 
 
 
@@ -26,7 +30,6 @@ Vue.use(VueRouter)
     component: ProductBrowser,
     beforeEnter: async (to, from, next) => {
       try {
-        console.log("working")
         var listings = await http().get(`${process.env.VUE_APP_API_URL}/api/listings/c/${to.params.category}`);
         console.log(listings);
         if(listings.data.length == 0){
@@ -58,6 +61,23 @@ Vue.use(VueRouter)
     path: '/sell',
     name: 'Sell',
     component: Sell
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: User,
+    beforeEnter(to, from, next){ 
+      if(store.getters.isLoggedIn){
+        next();
+      }else {
+        next('/login')
+      }
+    }
   }
 
 ]

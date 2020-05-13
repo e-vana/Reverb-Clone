@@ -29,6 +29,7 @@ export default {
   props: {
     imageUrl: String,
     price: Number,
+    shippingPrice: Number,
     condition: String,
     itemName: String,
     itemLink: String
