@@ -56,10 +56,23 @@ export default new Vuex.Store({
       context.commit("SET_LOADING", !context.state.loading)
     },
     addToCart: (context, payload) => {
-      context.commit("SET_CART_ITEM", payload)
+      var arr = context.getters.getCart;
+      if (arr.filter(function(e) { return e._id === payload._id; }).length > 0) {
+        console.log("this arr contains the element")
+      } else {
+        context.commit("SET_CART_ITEM", payload)
+      }
     },
     removeFromCart: (context, payload) => {
-      context.commit("REMOVE_CART_ITEM", payload)
+      var arr = context.getters.getCart;
+      if (arr.filter(function(e) {
+        return e._id === payload._id;
+      }).length > 0) {
+        console.log("this arr contains the element")
+      } else {
+        context.commit("REMOVE_CART_ITEM", payload)
+
+      }
     },
     loginUser: (context) => {
       context.commit("SET_USER_LOGIN")
