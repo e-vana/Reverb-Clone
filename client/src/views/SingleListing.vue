@@ -78,9 +78,7 @@ export default {
   },
   methods: {
     addToCart: function() {
-      console.log("fired")
-      this.$store.dispatch("addToCart", this.listing._id)
-      console.log(this.$store.getters.getCartLength);
+      this.$store.dispatch("addToCart", this.listing)
     },
     addToWatchList: function(){ 
       this.$store.dispatch("setWatchListItem", this.listing)

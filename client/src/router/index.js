@@ -11,6 +11,8 @@ import SingleListing from '../views/SingleListing.vue'
 import Sell from '../views/Sell.vue'
 import Login from '../views/Login.vue'
 import User from '../views/User.vue'
+import Cart from '../views/Cart.vue'
+
 
 
 
@@ -66,6 +68,11 @@ Vue.use(VueRouter)
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/cart', 
+    name: 'Cart',
+    component: Cart
   },
   {
     path: '/user',

@@ -32,12 +32,14 @@
           </div>
         </div>
 
+        <router-link to="/cart">
         <div class="navigation-link" >
           <div class="navigation-link-content">
             <b-icon font-scale="2" icon="bag"></b-icon>
             <p>Cart ({{ this.$store.getters.getCartLength }})</p>
           </div>
         </div>
+        </router-link>
 
         <div class="navigation-link" >
           <div class="navigation-link-content">
